@@ -1,0 +1,64 @@
+CREATE TABLE Departments
+(
+	Dept_ID  INT PRIMARY KEY,
+	Dept_Name CHAR,
+	Location CHAR
+);
+
+CREATE TABLE Employees
+(
+	Emp_ID INT PRIMARY KEY,
+	Name CHAR,
+	Salary DECIMAL(10, 2),
+	Dept_ID  INT,
+  	Job	CHAR,
+	FOREIGN KEY (Dept_ID) REFERENCES Departments(Dept_ID)
+);
+
+INSERT INTO Departments (Dept_ID, Dept_Name, Location) 
+VALUES 
+(10, 'IT', 'New York'),
+(20, 'HR', 'Los Angeles'), 
+(30, 'Finance', 'New York'),
+(40, 'Marketing', 'Chicago');
+
+INSERT INTO Employees (Emp_ID, Name, Salary, Dept_ID, Job)
+VALUES
+(1, 'John', 5000, 10, 'Developer'),
+(2, 'Alice', 6000, 10, 'Developer'),
+(3, 'Bob', 4000, 20, 'HR Specialist'),
+(4, 'Eva', 4500, 20, 'HR Specialist'),
+(5, 'Tom', 7000, 30, 'Accountant'),
+(6, 'Jerry', 7500, 30, 'Accountant'),
+(7, 'Diana', 5500, 40, 'Marketer');
+
+
+--1. Employees earning more than the average salary
+
+SELECT *
+FROM Employees
+WHERE Salary > (SELECT AVG(Salary) FROM Employees)
+
+OR
+ 
+SELECT *
+FROM Employees
+GROUP BY Salary
+HAVING Salary > (SELECT AVG(salary) FROM Employees);
+
+ 
+--2.Employees working in departments located in 'New York'
+
+SELECT *
+FROM Employees
+WHERE Dept_ID IN (SELECT Dept_ID FROM Departments WHERE Location = 'New York');
+
+
+ 
+--4.Employees earning more than the highest salary in department 10
+ 
+SELECT *
+FROM Employees
+WHERE Salary > (SELECT MAX(Salary) FROM Employees WHERE Dept_ID = 10);
+
+ 
